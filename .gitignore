@@ -1,0 +1,5 @@
+# Ignore BSP build tool configuration
+**/.bsp/
+
+# Ignore Scala build tool output
+**/.scala-build/
