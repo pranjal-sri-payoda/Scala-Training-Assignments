@@ -3,3 +3,11 @@
 
 # Ignore Scala build tool output
 **/.scala-build/
+
+**/target/
+
+**/.idea/
+**/*.iml
+.DS_Store
+**/.vscode/
+**/*.log/
