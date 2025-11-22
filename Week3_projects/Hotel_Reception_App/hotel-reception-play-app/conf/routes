@@ -1,0 +1,49 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# https://www.playframework.com/documentation/latest/ScalaRouting
+# ~~~~
+
+# An example controller showing a sample home page
+GET     /                           controllers.HomeController.index()
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+
+# ===========================
+# AUTH
+# ===========================
+POST    /api/auth/login                     controllers.AuthController.login
+
+# ===========================
+# GUESTS
+# ===========================
+GET     /api/guests                         controllers.GuestController.list
+GET     /api/guests/:id                     controllers.GuestController.get(id: Long)
+POST    /api/guests                         controllers.GuestController.create
+PUT     /api/guests/:id                     controllers.GuestController.update(id: Long)
+DELETE  /api/guests/:id                     controllers.GuestController.delete(id: Long)
+
+# ===========================
+# ROOMS
+# ===========================
+GET     /api/rooms                          controllers.RoomController.list
+
+# ===========================
+# ROOM CATEGORIES
+# ===========================
+GET     /api/room-categories                controllers.RoomCategoryController.list
+
+# ===========================
+# BOOKINGS
+# ===========================
+GET     /api/bookings                       controllers.BookingController.list
+GET     /api/bookings/:id                   controllers.BookingController.get(id: Long)
+POST    /api/bookings                       controllers.BookingController.create
+PUT     /api/bookings/:id                   controllers.BookingController.update(id: Long)
+
+# ================================
+# Kafka Producer Routes
+# ================================
+POST   /api/kafka/booking        controllers.KafkaController.sendBookingEvent
+POST   /api/kafka/checkout      controllers.KafkaController.sendCheckoutEvent
+
