@@ -14,12 +14,12 @@ class GuestService @Inject()(guestDAO: GuestDAO)(implicit ec: ExecutionContext) 
   def getById(id: Long): Future[Option[Guest]] =
     guestDAO.getById(id)
 
-  def create(name: String, email: String, phone: String, idProofPath: String): Future[Guest] = {
+  def create(name: String, email: String, phone: String, idProof: String): Future[Guest] = {
     val guest = Guest(
       fullName = name,
       email = email,
       phone = phone,
-      idProofPath = Some(idProofPath),
+      idProof = Some(idProof),
       createdAt = Some(new Timestamp(System.currentTimeMillis()))
     )
     guestDAO.insert(guest)

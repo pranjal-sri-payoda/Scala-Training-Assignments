@@ -10,21 +10,28 @@ object WifiServiceActor {
   case class SendWifiCredentials(email: String, wifiUser: String, wifiPass: String) extends Command
 
   def apply(): Behavior[Command] =
-    Behaviors.receive { (ctx, msg) =>
+    Behaviors.receive { (_, msg) =>
       msg match {
 
         case SendWifiCredentials(email, wifiUser, wifiPass) =>
           println(s"[WiFiService] Sending WiFi credentials to $email")
 
-          val subject = "WiFi Login Details"
+          val subject = "Your WiFi Login Details"
           val body =
             s"""
-               |Your WiFi login credentials:
+               |Hello,
                |
-               |Username: $wifiUser
-               |Password: $wifiPass
+               |Here are your WiFi login details:
                |
-               |Enjoy your stay!
+               |• Username: $wifiUser
+               |• Password: $wifiPass
+               |
+               |You may connect your devices anytime.
+               |
+               |If you face any issues, please contact the front desk.
+               |
+               |Regards,
+               |Hotel IT Support
                |""".stripMargin
 
           EmailHelper.sendEmail(email, subject, body)

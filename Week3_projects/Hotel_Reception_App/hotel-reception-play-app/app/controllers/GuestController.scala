@@ -39,7 +39,7 @@ class GuestController @Inject()(
     val name = (req.body \ "name").as[String]
     val email = (req.body \ "email").as[String]
     val phone = (req.body \ "phone").as[String]
-    val idProof = (req.body \ "idProofPath").as[String]
+    val idProof = (req.body \ "idProof").as[String]
 
     guestService.create(name, email, phone, idProof).map { g =>
       Created(Json.obj("message" -> "Guest created", "data" -> g))

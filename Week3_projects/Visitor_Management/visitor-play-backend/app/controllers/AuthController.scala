@@ -1,7 +1,7 @@
 package controllers
 
-import play.api.libs.json._
 import play.api.mvc._
+import play.api.libs.json._
 import security.JwtUtil
 
 import javax.inject._

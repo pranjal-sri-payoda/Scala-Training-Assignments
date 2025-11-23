@@ -12,7 +12,7 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 # ===========================
 # AUTH
 # ===========================
-POST    /api/auth/login                     controllers.AuthController.login
+POST    /api/login                     controllers.AuthController.login
 
 # ===========================
 # GUESTS
@@ -44,6 +44,6 @@ PUT     /api/bookings/:id                   controllers.BookingController.update
 # ================================
 # Kafka Producer Routes
 # ================================
-POST   /api/kafka/booking        controllers.KafkaController.sendBookingEvent
+POST   /api/kafka/checkin        controllers.KafkaController.sendCheckinEvent
 POST   /api/kafka/checkout      controllers.KafkaController.sendCheckoutEvent
 

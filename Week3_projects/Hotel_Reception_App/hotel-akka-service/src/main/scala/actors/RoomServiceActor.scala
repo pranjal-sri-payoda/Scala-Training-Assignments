@@ -7,27 +7,36 @@ import utils.EmailHelper
 object RoomServiceActor {
 
   sealed trait Command
-  case class SendWelcomeEmail(email: String, roomNo: String) extends Command
+  case class SendWelcomeEmail(name: String, email: String, roomNo: String, category: String) extends Command
 
   def apply(): Behavior[Command] =
-    Behaviors.receive { (ctx, msg) =>
+    Behaviors.receive { (_, msg) =>
       msg match {
 
-        case SendWelcomeEmail(email, roomNo) =>
+        case SendWelcomeEmail(name, email, roomNo, category) =>
           println(s"[RoomService] Sending welcome email to $email")
 
-          val subject = s"Welcome to the Hotel - Room $roomNo"
+          val subject = s"Welcome to Our Hotel - Room $roomNo"
           val body =
             s"""
-               |Dear Guest,
+               |Dear $name,
                |
-               |Welcome to our hotel!
-               |Your room number is $roomNo.
+               |Welcome to our hotel! We are delighted to have you stay with us.
                |
-               |Emergency: 999
-               |Room Service: 202
+               |Your room details are as follows:
+               |• Room Number: $roomNo
+               |• Category: $category
                |
-               |Enjoy your stay!
+               |Useful Numbers:
+               |• Emergency: 999
+               |• Room Service: 202
+               |
+               |If you need anything at all, feel free to reach out.
+               |
+               |We wish you a pleasant and comfortable stay!
+               |
+               |Warm regards,
+               |Hotel Guest Services
                |""".stripMargin
 
           EmailHelper.sendEmail(email, subject, body)

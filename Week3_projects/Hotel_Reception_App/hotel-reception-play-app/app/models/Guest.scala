@@ -12,7 +12,7 @@ case class Guest(
                   email: String,
                   phone: String,
                   address: Option[String] = None,
-                  idProofPath: Option[String] = None,
+                  idProof: Option[String] = None,
                   createdAt: Option[Timestamp] = None,
                   updatedAt: Option[Timestamp] = None
                 )
@@ -30,12 +30,12 @@ class GuestDAO @Inject()(dbConfigProvider: DatabaseConfigProvider)
     def email = column[String]("email")
     def phone = column[String]("phone")
     def address = column[Option[String]]("address")
-    def idProofPath = column[Option[String]]("id_proof_path")
+    def idProof = column[Option[String]]("id_proof")
     def createdAt = column[Option[Timestamp]]("created_at")
     def updatedAt = column[Option[Timestamp]]("updated_at")
 
     def * =
-      (id, fullName, email, phone, address, idProofPath, createdAt, updatedAt)
+      (id, fullName, email, phone, address, idProof, createdAt, updatedAt)
         .<>((Guest.apply _).tupled, Guest.unapply)
   }
 

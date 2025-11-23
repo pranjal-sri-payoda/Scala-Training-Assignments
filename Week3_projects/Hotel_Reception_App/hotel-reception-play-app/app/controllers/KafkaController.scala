@@ -14,7 +14,7 @@ class KafkaController @Inject()(
                                )(implicit ec: ExecutionContext)
   extends AbstractController(cc) {
 
-  def sendBookingEvent = Action.async(parse.json) { req =>
+  def sendCheckinEvent = Action.async(parse.json) { req =>
     val bookingId = (req.body \ "bookingId").as[Long]
 
     kafkaProducerService.processBookingEvent(bookingId).map {

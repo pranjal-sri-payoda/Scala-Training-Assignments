@@ -21,41 +21,48 @@ object ServiceCoordinatorActor {
         case ProcessBookingEvent(eventJson) =>
           println(s"[Coordinator] Raw event received: ${eventJson.prettyPrint}")
 
-          val json = eventJson.asJsObject
+          val json     = eventJson.asJsObject
           println("[Coordinator] Parsed JSON")
 
-          val eventType = json.fields("event").convertTo[String]
+          val eventType    = json.fields("event").convertTo[String]
           println(s"[Coordinator] Event type: $eventType")
 
           val guestObj = json.fields("guest").asJsObject
           println(s"[Coordinator] Guest JSON: ${guestObj.prettyPrint}")
 
-          val guestId = guestObj.fields("id").convertTo[String]
-          val email   = guestObj.fields("email").convertTo[String]
-          val roomNo  = json.fields("room").asJsObject.fields("roomNumber").convertTo[String]
+          val roomObj  = json.fields("room").asJsObject
+          println(s"[Coordinator] Room JSON: ${roomObj.prettyPrint}")
 
-          println(s"[Coordinator] guestId=$guestId, email=$email, roomNo=$roomNo")
+
+          val guestId   = guestObj.fields("id").toString().replace("\"", "")
+          val fullName  = guestObj.fields.get("fullName").map(_.convertTo[String]).getOrElse("")
+          val email     = guestObj.fields.get("email").map(_.convertTo[String]).getOrElse("")
+          val roomNo    = roomObj.fields.get("roomNumber").map(_.convertTo[String]).getOrElse("")
+          val category  = roomObj.fields.get("category").map(_.convertTo[String]).getOrElse("")
+
+
+          println(s"[Coordinator] guestId=$guestId, guestName=$fullName, email=$email, roomNo=$roomNo")
 
 
           eventType match {
 
             case "CHECK_IN" =>
-              println(s"[Coordinator] Received CHECK_IN for $guestId")
+              println(s"[Coordinator] Received CHECK_IN for $fullName($guestId)")
 
               println("[Coordinator] Forwarding to RoomServiceActor...")
-              roomService ! RoomServiceActor.SendWelcomeEmail(email, roomNo)
+              roomService ! RoomServiceActor.SendWelcomeEmail(fullName, email, roomNo, category)
 
               println("[Coordinator] Forwarding to WifiServiceActor...")
               wifiService ! WifiServiceActor.SendWifiCredentials(email, s"user_$roomNo", "password123")
 
               // Forward to registry. Registry will store and trigger the immediate menu send.
               println("[Coordinator] Forwarding to GuestRegistryActor (will trigger immediate menu)...")
-              restaurantRegistry ! GuestRegistryActor.GuestCheckedIn(guestId, email, roomNo)
+              restaurantRegistry ! GuestRegistryActor.GuestCheckedIn(guestId, fullName, email, roomNo)
 
 
             case "CHECK_OUT" =>
-              println(s"[Coordinator] Guest $guestId CHECKED OUT")
-              restaurantRegistry ! GuestRegistryActor.GuestCheckedOut(guestId)
+              println(s"[Coordinator] Guest $fullName($guestId) staying in room $roomNo has CHECKED OUT")
+              restaurantRegistry ! GuestRegistryActor.GuestCheckedOut(guestId, fullName)
 
             case unknown =>
               println(s"[Coordinator] Ignoring unknown event: $unknown")

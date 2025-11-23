@@ -7,36 +7,39 @@ import utils.EmailHelper
 object RestaurantServiceActor {
 
   sealed trait Command
-  case class SendMenu(email: String, roomNo: String) extends Command
+  case class SendMenu(name: String, email: String, roomNo: String) extends Command
 
   def apply(): Behavior[Command] =
-    Behaviors.receive { (ctx, msg) =>
+    Behaviors.receive { (_, msg) =>
       msg match {
 
-        case SendMenu(email, roomNo) =>
+        case SendMenu(name, email, roomNo) =>
           println(s"[Restaurant] Received SendMenu command for $email, room = $roomNo")
 
           val subject = "Today's Restaurant Menu"
           val body =
             s"""
-               |Good morning!
+               |Dear $name,
                |
-               |Today's menu:
-               |🍲 Soup
+               |Good morning! ☀️
+               |
+               |Here is today's delicious restaurant menu:
+               |
+               |🍲 Soup of the Day
                |🥘 Paneer Masala
-               |🍛 Rice
-               |🍞 Roti
-               |🍮 Dessert
+               |🍛 Steamed Basmati Rice
+               |🍞 Tandoori Roti
+               |🍮 Dessert of the Day
                |
-               |Room: $roomNo
+               |Your Room: $roomNo
                |
-               |Have a wonderful day!
+               |We hope you enjoy your meals and have a wonderful day ahead!
+               |
+               |Warm regards,
+               |Hotel Restaurant Team
                |""".stripMargin
 
-          println("[Restaurant] Sending email through EmailHelper...")
           EmailHelper.sendEmail(email, subject, body)
-          println("[Restaurant] EmailHelper completed")
-
           Behaviors.same
       }
     }

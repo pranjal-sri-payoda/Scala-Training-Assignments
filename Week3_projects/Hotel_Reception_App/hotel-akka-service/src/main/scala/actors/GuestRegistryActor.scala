@@ -12,11 +12,11 @@ import akka.actor.typed.{ActorRef, Behavior}
 object GuestRegistryActor {
 
   sealed trait Command
-  case class GuestCheckedIn(id: String, email: String, room: String) extends Command
-  case class GuestCheckedOut(id: String) extends Command
+  case class GuestCheckedIn(id: String, name:String, email: String, room: String) extends Command
+  case class GuestCheckedOut(id: String, name: String) extends Command
   case object SendDailyMenus extends Command
 
-  case class GuestInfo(email: String, room: String)
+  case class GuestInfo(name: String, email: String, room: String)
 
   def apply(restaurantService: ActorRef[RestaurantServiceActor.Command]): Behavior[Command] =
     Behaviors.setup { ctx =>
@@ -24,23 +24,23 @@ object GuestRegistryActor {
 
       Behaviors.receiveMessage {
 
-        case GuestCheckedIn(id, email, room) =>
-          println(s"[Registry] CHECK_IN RECEIVED for $id")
-          println(s"[Registry] Storing guest: id=$id, email=$email, room=$room")
+        case GuestCheckedIn(id, name, email, room) =>
+          println(s"[Registry] CHECK_IN RECEIVED for $name($id)")
+          println(s"[Registry] Storing guest: id=$id, name=$name, email=$email, room=$room")
 
-          activeGuests += (id -> GuestInfo(email, room))
+          activeGuests += (id -> GuestInfo(name, email, room))
 
           println(s"[Registry] Current active guests: ${activeGuests.keys.mkString(",")}")
 
           // --- SEND FIRST IMMEDIATE MENU EMAIL ---
-          println(s"[Registry] Sending immediate menu for $id (${email}) after check-in")
-          restaurantService ! RestaurantServiceActor.SendMenu(email, room)
+          println(s"[Registry] Sending immediate menu for $name($id) (${email}) after check-in")
+          restaurantService ! RestaurantServiceActor.SendMenu(name, email, room)
 
           Behaviors.same
 
-        case GuestCheckedOut(id) =>
+        case GuestCheckedOut(id, name) =>
           activeGuests -= id
-          println(s"[Registry] Guest $id removed. Active guests = ${activeGuests.size}")
+          println(s"[Registry] Guest $name($id) removed. Active guests = ${activeGuests.size}")
           Behaviors.same
 
         case SendDailyMenus =>
@@ -49,7 +49,7 @@ object GuestRegistryActor {
 
           activeGuests.foreach { case (id, info) =>
             println(s"[Registry] Sending menu request → $id (${info.email})")
-            restaurantService ! RestaurantServiceActor.SendMenu(info.email, info.room)
+            restaurantService ! RestaurantServiceActor.SendMenu(info.name, info.email, info.room)
           }
 
           Behaviors.same

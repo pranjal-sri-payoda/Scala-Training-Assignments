@@ -54,25 +54,31 @@ class KafkaProducerService @Inject()(
 
         case Some(booking) =>
           for {
-            guestOpt <- guestDAO.getById(booking.guestId)
-            roomOpt  <- roomDAO.findById(booking.roomId)
+            guestOpt     <- guestDAO.getById(booking.guestId)
+            roomOpt      <- roomDAO.findById(booking.roomId)
+            categoryOpt  <- roomCategoryDAO.findById(roomOpt.map(_.categoryId).getOrElse(0L))
           } yield {
 
             if (guestOpt.isEmpty) Left("Guest not found")
             else if (roomOpt.isEmpty) Left("Room not found")
+            else if (categoryOpt.isEmpty) Left("Room category not found")
             else {
 
               val guest = guestOpt.get
               val room  = roomOpt.get
+              val category = categoryOpt.get
 
               val payload = Json.obj(
                 "event" -> "CHECK_IN",
                 "guest" -> Json.obj(
-                  "id" -> guest.id.toString,
-                  "email" -> guest.email
+                  "id"       -> guest.id.toString,
+                  "email"    -> guest.email,
+                  "fullName" -> guest.fullName
                 ),
                 "room" -> Json.obj(
-                  "roomNumber" -> room.roomNumber
+                  "roomNumber" -> room.roomNumber,
+                  "floor"      -> room.floor,
+                  "category" -> category.name
                 )
               )
 
@@ -98,21 +104,31 @@ class KafkaProducerService @Inject()(
 
         case Some(booking) =>
           for {
-            guestOpt <- guestDAO.getById(booking.guestId)
+            guestOpt    <- guestDAO.getById(booking.guestId)
+            roomOpt     <- roomDAO.findById(booking.roomId)
+            _           <- bookingDAO.markAsCheckedOut(bookingId)
+            _           <- roomDAO.markRoomAvailable(booking.roomId)
           } yield {
 
             if (guestOpt.isEmpty) Left("Guest not found")
+            else if (roomOpt.isEmpty) Left("Room not found")
             else {
 
-              // marking room free
-              bookingDAO.markAsCheckedOut(bookingId)
-              roomDAO.markRoomAvailable(booking.roomId)
+              val guest = guestOpt.get
+              val room  = roomOpt.get
 
               val payload = Json.obj(
                 "event" -> "CHECK_OUT",
                 "guest" -> Json.obj(
-                  "id" -> booking.guestId.toString
-                )
+                  "id"       -> guest.id,
+                  "fullName" -> guest.fullName,
+                  "email"    -> guest.email
+                ),
+                "room" -> Json.obj(
+                  "id"         -> room.id,
+                  "roomNumber" -> room.roomNumber
+                ),
+                "message" -> s"Room ${room.roomNumber} is now available after guest checkout."
               )
 
               println("Sending CHECK-OUT event: " + payload)
