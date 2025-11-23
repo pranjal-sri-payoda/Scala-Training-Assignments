@@ -7,8 +7,8 @@ object EmailHelper {
 
   private val smtpHost = "smtp.gmail.com"
   private val smtpPort = "587"
-  private val username = "5683pranjal@gmail.com"      // TODO
-  private val password = "pxtlcgtkznyllngk"         // TODO (Gmail App Password)
+  private val username = "test@email.com"      // TODO
+  private val password = "password"         // TODO (Gmail App Password)
 
   private val session: Session = {
     val props = new java.util.Properties()
