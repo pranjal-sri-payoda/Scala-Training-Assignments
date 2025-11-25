@@ -1,7 +1,7 @@
 # ===============================
 # 1. BUILD STAGE (JDK 17)
 # ===============================
-FROM hseeberger/scala-sbt:17.0.5_1.8.0_2.13.10 AS build
+FROM sbtscala/scala-sbt:eclipse-temurin-17.0.15_6_1.11.1_3.3.6 AS build
 # (closest available tag for JDK17 + sbt)
 
 # Override sbt version to match your local version
