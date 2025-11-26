@@ -30,8 +30,13 @@ class KafkaProducerService @Inject()(
   // -------------------------------------------------
   private val topic = "visitor_notifications"
 
+  private val bootstrapServers: String =
+    sys.env.getOrElse("KAFKA_BOOTSTRAP_SERVER", "localhost:9092")
+
+  println(s"[KafkaProducer] Using broker: $bootstrapServers")
+
   private val props = new java.util.Properties()
-  props.put("bootstrap.servers", "localhost:9092")
+  props.put("bootstrap.servers", bootstrapServers)
   props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer")
   props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer")
 

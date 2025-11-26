@@ -20,9 +20,14 @@ object KafkaVisitorConsumer {
 
     implicit val ec: ExecutionContext = system.executionContext
 
+    val kafkaBootstrapServers: String =
+      sys.env.getOrElse("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
+
+    println(s"🔗 Using Kafka Bootstrap Server: $kafkaBootstrapServers")
+
     val consumerSettings =
       ConsumerSettings(system, new StringDeserializer, new StringDeserializer)
-        .withBootstrapServers("localhost:9092")
+        .withBootstrapServers(kafkaBootstrapServers)
         .withGroupId("visitor-consumer-group-v1")
         .withProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "latest")
         .withProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true")
