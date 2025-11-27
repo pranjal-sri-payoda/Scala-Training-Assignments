@@ -1,0 +1,14 @@
+@()(implicit request: RequestHeader)
+
+@main("Upload Multiple Files") {
+
+    @helper.form(
+        action = routes.HomeController.uploadMultiple,
+        Symbol("enctype") -> "multipart/form-data"
+    ) {
+        @helper.CSRF.formField
+
+        <input type="file" name="files" multiple>
+        <button type="submit">Upload Files</button>
+    }
+}

@@ -1,7 +1,5 @@
 package controllers
 
-import play.api.Logging
-import play.api.i18n.I18nSupport
 import play.api.libs.Files.TemporaryFile
 import play.api.mvc.*
 
@@ -28,7 +26,7 @@ class HomeController @Inject()(
           val fileName = filePart.filename
 
           val target = Paths.get(
-            s"FILE_UPLOAD_PATH/$fileName"
+            s"HOME_PATH/uploaded-files/$fileName"
           )
 
           Files.createDirectories(target.getParent)
@@ -40,6 +38,39 @@ class HomeController @Inject()(
         case None =>
           println("Upload attempt without a file")
           BadRequest("No file uploaded")
+      }
+    }
+
+  def indexFiles: Action[AnyContent] = Action { implicit request =>
+    println("Files page called")
+    Ok(views.html.files())
+  }
+
+  def uploadMultiple: Action[MultipartFormData[TemporaryFile]] =
+    Action(parse.multipartFormData) { implicit request =>
+      println("Multiple file upload triggered")
+
+      val uploadedFiles = request.body.files
+
+      if (uploadedFiles.isEmpty) {
+        println("No files uploaded")
+        BadRequest("No files uploaded")
+      } else {
+        uploadedFiles.foreach { filePart =>
+          val tempFile = filePart.ref
+          val fileName = filePart.filename
+
+          val target = Paths.get(
+            s"HOME_PATH/multiple-uploaded-files/$fileName"
+          )
+
+          Files.createDirectories(target.getParent)
+          tempFile.moveTo(target, replace = true)
+
+          println(s"Saved: $fileName -> $target")
+        }
+
+        Ok(s"${uploadedFiles.length} files uploaded successfully!")
       }
     }
 }
