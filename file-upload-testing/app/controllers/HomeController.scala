@@ -30,7 +30,7 @@ class HomeController @Inject()(
           val fileName = filePart.filename
 
           val target = Paths.get(
-            s"/Users/admin/IdeaProjects/file-upload-testing/conf/uploaded-files/$fileName"
+            s"FILE_UPLOAD_PATH/$fileName"
           )
 
           Files.createDirectories(target.getParent)
