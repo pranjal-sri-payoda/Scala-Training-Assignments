@@ -11,9 +11,7 @@ import java.nio.file.{Files, Paths}
 @Singleton
 class HomeController @Inject()(
                                 val controllerComponents: ControllerComponents
-                              ) extends BaseController
-  with Logging
-  with I18nSupport {   // <-- IMPORTANT FIX
+                              ) extends BaseController {
 
   def index: Action[AnyContent] = Action { implicit request =>
     println("Index page called")
