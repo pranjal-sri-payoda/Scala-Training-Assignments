@@ -17,10 +17,10 @@ object WriteToMySQLPipeline {
     df2.limit(10)
       .write
       .format("jdbc")
-      .option("url", "jdbc:mysql://azuremysql8823.mysql.database.azure.com/pranjal")
+      .option("url", "jdbc:mysql://scaladb.mysql.com/db_name")
       .option("dbtable", "trip_summary")
       .option("user", "mysqladmin")
-      .option("password", "Password@12345")
+      .option("password", "password")
       .option("driver", "com.mysql.cj.jdbc.Driver")
       .mode("append")
       .save()
