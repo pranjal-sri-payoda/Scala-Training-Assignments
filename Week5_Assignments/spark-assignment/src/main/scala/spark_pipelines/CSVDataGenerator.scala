@@ -1,7 +1,9 @@
+package spark_pipelines
+
 import java.io._
-import scala.util.Random
 import java.time._
 import java.time.format.DateTimeFormatter
+import scala.util.Random
 
 object CSVDataGenerator extends App {
   val file = new PrintWriter(new File("urbanmove_trips.csv"))

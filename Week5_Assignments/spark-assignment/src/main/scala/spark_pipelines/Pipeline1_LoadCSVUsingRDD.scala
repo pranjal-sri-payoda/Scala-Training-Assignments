@@ -1,6 +1,8 @@
+package spark_pipelines
+
 import org.apache.spark.sql.SparkSession
 
-object LoadCSVUsingRDD {
+object Pipeline1_LoadCSVUsingRDD {
   def main(args: Array[String]): Unit = {
 
     val spark = SparkSession.builder()

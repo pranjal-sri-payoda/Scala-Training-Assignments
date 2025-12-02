@@ -1,6 +1,8 @@
-import org.apache.spark.sql.{SparkSession, functions => F}
+package spark_pipelines
 
-object TripSQLPipeline {
+import org.apache.spark.sql.SparkSession
+
+object Pipeline6_TripSQL {
 
   def main(args: Array[String]): Unit = {
 
@@ -8,8 +10,6 @@ object TripSQLPipeline {
       .appName("Trip SQL Pipeline")
       .master("local[*]")
       .getOrCreate()
-
-    import spark.implicits._
 
     // Load DataFrame
     val df = spark.read.parquet(

@@ -1,6 +1,8 @@
+package spark_pipelines
+
 import org.apache.spark.sql.{SparkSession, functions => F}
 
-object TripAggregations {
+object Pipeline5_TripAggregations {
 
   def main(args: Array[String]): Unit = {
 

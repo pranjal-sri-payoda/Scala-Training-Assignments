@@ -1,6 +1,8 @@
+package spark_pipelines
+
 import org.apache.spark.sql.{SparkSession, functions => F}
 
-object CleanTripDataFrame {
+object Pipeline3_CleanTripDataFrame {
 
   def main(args: Array[String]): Unit = {
 

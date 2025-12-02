@@ -1,6 +1,8 @@
+package spark_pipelines
+
 import org.apache.spark.sql.SparkSession
 
-object ParquetReAggPipeline {
+object Pipeline8_ParquetReAggPipeline {
 
   def main(args: Array[String]): Unit = {
 

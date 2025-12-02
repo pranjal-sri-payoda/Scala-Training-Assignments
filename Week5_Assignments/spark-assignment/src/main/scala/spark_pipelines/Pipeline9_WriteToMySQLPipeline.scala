@@ -1,6 +1,8 @@
+package spark_pipelines
+
 import org.apache.spark.sql.SparkSession
 
-object WriteToMySQLPipeline {
+object Pipeline9_WriteToMySQLPipeline {
 
   def main(args: Array[String]): Unit = {
 

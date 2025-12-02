@@ -1,6 +1,8 @@
+package spark_pipelines
+
 import org.apache.spark.sql.{SparkSession, functions => F}
 
-object ExportAnalyticsReport {
+object Pipeline10_ExportAnalyticsReport {
 
   def main(args: Array[String]): Unit = {
 

@@ -1,6 +1,8 @@
-import org.apache.spark.sql.{SparkSession, functions => F}
+package spark_pipelines
 
-object WriteParquetPipeline {
+import org.apache.spark.sql.SparkSession
+
+object Pipeline7_DFToWriteParquet {
 
   def main(args: Array[String]): Unit = {
 
